@@ -4,18 +4,18 @@ Desktop application for optimizing SVG files, built with Electron and SVGO.
 
 ## Features
 
-- File Operations
+### File Operations
 - Select multiple SVG files
 - Select output directory
 - Batch processing
 
-- Optimization Options
+### Optimization Options
 - Remove comments, XML, styles and attributes
 - Remove metadata and editor data
 - Remove empty attributes and containers
 - Merge and optimize paths
 
-- UI Features
+### UI Features
 - Dark theme with gradient cards
 - Real-time optimization stats
 - File size reduction display

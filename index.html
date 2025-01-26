@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SVG Optimizer</title>
+    <style>
+        :root {
+            --bg-primary: #161618;
+            --bg-gradient-1: rgba(38, 38, 40, 0.1);
+            --bg-gradient-2: rgba(55, 55, 55, 0.5);
+            --bg-card: rgba(255, 255, 255, 0.025);
+            --border-card: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent: rgba(81, 81, 81, 0.3);
+            --accent2: #ffffff;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-primary);
+            letter-spacing: -1px;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: linear-gradient(30deg, var(--bg-gradient-1), var(--bg-gradient-2));
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--border-card);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--accent);
+            border: 1px solid var(--border-card);
+            color: white;
+            width: 100%;
+            padding: 0.5rem 1.75rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .optimization-options {
+            display: grid;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .option-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .files-list {
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+            min-height: 1rem;
+            word-break: break-all;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        #results {
+            margin-top: 1.5rem;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin: 0.75rem 0;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 1rem;
+        }
+
+        .success {
+            border-left: 3px solid var(--success);
+        }
+
+        .error {
+            border-left: 3px solid var(--error);
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+<header class="app-header">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+    </svg>
+    <span class="app-title">SVG Optimizer</span>
+</header>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <svg class="icon" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <path d="M3 15h6"></path>
+                    <path d="M3 18h6"></path>
+                    <path d="M3 12h6"></path>
+                </svg>
+                Optimization Settings
+            </h2>
+        </div>
+        <button id="selectBtn">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Select SVG Files
+        </button>
+
+        <div class="optimization-options">
+            <div class="option-group">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="removeComments" checked>
+                    <label for="removeComments">Remove comments</label>
+                </div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="removeMetadata" checked>
+                    <label for="removeMetadata">Remove metadata</label>
+                </div>
+            </div>
+            <div class="option-group">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="removeEmptyAttrs" checked>
+                    <label for="removeEmptyAttrs">Remove empty attributes</label>
+                </div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="mergePaths" checked>
+                    <label for="mergePaths">Merge paths</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="files-list" id="filesList">
+            No files selected
+        </div>
+
+        <button id="optimizeBtn" disabled>
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+                <path d="M21 2v6h-6"></path>
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+                <path d="M3 22v-6h6"></path>
+                <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+            </svg>
+            Optimize SVG
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <svg class="icon" viewBox="0 0 24 24" fill="none">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                </svg>
+                Optimization Results
+            </h2>
+        </div>
+        <div id="results"></div>
+    </div>
+</div>
+
+<script>
+    const filesList = document.getElementById('filesList')
+    const optimizeBtn = document.getElementById('optimizeBtn')
+    const resultsDiv = document.getElementById('results')
+    let selectedFiles = []
+
+    document.getElementById('selectBtn').addEventListener('click', async () => {
+        selectedFiles = await window.electronAPI.selectFiles()
+        filesList.innerHTML = selectedFiles.length ?
+            `Selected files (${selectedFiles.length}): ${selectedFiles.join(', ')}` :
+            'No files selected'
+        optimizeBtn.disabled = !selectedFiles.length
+    })
+
+    optimizeBtn.addEventListener('click', async () => {
+        const options = {
+            removeComments: document.getElementById('removeComments').checked,
+            removeMetadata: document.getElementById('removeMetadata').checked,
+            removeEmptyAttrs: document.getElementById('removeEmptyAttrs').checked,
+            mergePaths: document.getElementById('mergePaths').checked
+        }
+
+        optimizeBtn.disabled = true
+        resultsDiv.innerHTML = ''
+
+        const saveDir = await window.electronAPI.selectSaveDirectory()
+        if (!saveDir) {
+            optimizeBtn.disabled = false
+            return
+        }
+
+        const results = await window.electronAPI.optimizeSvgFiles(selectedFiles, options, saveDir)
+
+        results.forEach(result => {
+            const div = document.createElement('div')
+            div.className = `result-item ${result.success ? 'success' : 'error'}`
+
+            let content = `${result.success ? '✅' : '❌'} ${result.file}`
+            if (result.success) {
+                content += `
+            <div class="stats">
+              <span>Original: ${result.originalSize}KB</span>
+              <span>Optimized: ${result.optimizedSize}KB</span>
+              <span>Saved: ${result.savings}%</span>
+            </div>
+          `
+            } else {
+                content += ` - ${result.error}`
+            }
+
+            div.innerHTML = content
+            resultsDiv.appendChild(div)
+        })
+
+        optimizeBtn.disabled = false
+    })
+</script>
+</body>
+</html>
